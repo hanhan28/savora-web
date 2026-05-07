@@ -3,14 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Savora | Premium Gourmet Orders</title>
+    <title>SAVORAFOODS | Premium Gourmet Orders</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Library Supabase untuk koneksi database otomatis -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="style.css" />
     <script>
       tailwind.config = {
         darkMode: "class",
@@ -19,56 +18,17 @@
         },
       };
     </script>
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-        transition: background-color 0.5s ease;
-      }
-      .font-serif {
-        font-family: "Playfair Display", serif;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      .glass-nav {
-        backdrop-filter: blur(12px);
-        background: rgba(255, 255, 255, 0.8);
-        height: clamp(60px, 10vh, 90px);
-      }
-      .dark .glass-nav {
-        background: rgba(10, 10, 10, 0.8);
-      }
-      .gold-btn {
-        background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
-        transition: all 0.3s ease;
-      }
-      .category-pill {
-        transition: all 0.3s ease;
-        border: 1px solid #d4af37;
-      }
-      .category-pill.active {
-        background-color: #d4af37;
-        color: white;
-      }
-      .sticky-cart {
-        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-    </style>
   </head>
   <body
     class="bg-white text-gray-900 dark:bg-premiumDark dark:text-white pb-32"
   >
-    <!-- Navbar -->
     <nav
       class="fixed w-full top-0 z-50 px-[5vw] glass-nav border-b border-gray-100 dark:border-white/5 flex items-center justify-between"
     >
       <div
-        class="text-[clamp(1.2rem,2.5vw,1.8rem)] font-serif font-bold tracking-[0.3em] dark:text-gold uppercase"
+        class="text-xl font-serif font-bold tracking-[0.3em] dark:text-gold uppercase"
       >
-        SAVORA
+        SAVORAFOODS
       </div>
       <button
         onclick="toggleDarkMode()"
@@ -78,126 +38,72 @@
       </button>
     </nav>
 
-    <!-- Header & Mode Toggle -->
-    <header class="pt-32 pb-10 px-6 max-w-4xl mx-auto">
+    <header class="pt-24 pb-6 px-6 max-w-4xl mx-auto">
       <div class="bg-gray-100 dark:bg-white/5 p-1 rounded-2xl flex mb-8">
         <button
           onclick="setOrderMode('pickup')"
           id="btn-pickup"
-          class="flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-white dark:bg-gold text-gray-900 dark:text-white shadow-sm"
+          class="flex-1 py-3 rounded-xl font-bold text-sm bg-gold text-white shadow-sm"
         >
           Pick Up
         </button>
         <button
           onclick="setOrderMode('delivery')"
           id="btn-delivery"
-          class="flex-1 py-3 rounded-xl font-bold text-sm transition-all text-gray-400"
+          class="flex-1 py-3 rounded-xl font-bold text-sm text-gray-400"
         >
           Delivery
         </button>
       </div>
       <div class="text-center">
-        <p
-          id="location-info"
-          class="text-[10px] uppercase tracking-widest text-gold font-bold mb-4 italic"
-        >
-          Store: Samarinda Seberang
-        </p>
-        <h1 class="font-serif text-4xl md:text-6xl font-bold leading-tight">
-          Good Day, <br /><span class="text-gold italic text-5xl md:text-7xl"
+        <h1 class="font-serif text-4xl font-bold leading-tight">
+          Good Day, <br /><span class="text-gold italic text-5xl font-light"
             >Savorist!</span
           >
         </h1>
       </div>
     </header>
 
-    <!-- Kategori -->
     <div
-      class="sticky top-[clamp(60px,10vh,90px)] z-40 bg-white/90 dark:bg-premiumDark/90 backdrop-blur-md py-4 overflow-x-auto no-scrollbar px-6 flex gap-3 border-b border-gray-100 dark:border-white/5"
+      class="sticky top-[70px] z-40 bg-white/90 dark:bg-premiumDark/90 backdrop-blur-md py-4 overflow-x-auto no-scrollbar px-6 flex gap-3 border-b border-gray-100 dark:border-white/5"
     >
       <button
-        onclick="filterMenu('all')"
+        onclick="filterMenu('all', event)"
         class="category-pill active px-6 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap"
       >
         Semua
       </button>
       <button
-        onclick="filterMenu('tahu')"
+        onclick="filterMenu('rogut', event)"
         class="category-pill px-6 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap text-gold"
       >
-        Tahu Bakso
+        Risol Rogut
       </button>
       <button
-        onclick="filterMenu('risol')"
+        onclick="filterMenu('mayo', event)"
         class="category-pill px-6 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap text-gold"
       >
         Risol Mayo
       </button>
+      <button
+        onclick="filterMenu('taso-ori', event)"
+        class="category-pill px-6 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap text-gold"
+      >
+        Taso Original
+      </button>
+      <button
+        onclick="filterMenu('taso-lumer', event)"
+        class="category-pill px-6 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap text-gold"
+      >
+        Taso Lumer
+      </button>
     </div>
 
-    <!-- Menu List -->
-    <section id="menu-container" class="py-10 px-6 max-w-5xl mx-auto space-y-8">
-      <!-- Risol -->
-      <div class="menu-item" data-category="risol">
-        <div
-          class="flex gap-4 md:gap-8 items-center bg-gray-50 dark:bg-white/5 p-5 rounded-[2.5rem] border border-gray-100 dark:border-white/5 group transition-all hover:shadow-xl"
-        >
-          <div
-            class="w-28 h-28 md:w-44 md:h-44 bg-gray-200 dark:bg-neutral-800 rounded-[1.8rem] flex-shrink-0 flex items-center justify-center text-gray-400 italic text-[10px]"
-          >
-            Risol Mayo
-          </div>
-          <div class="flex-1">
-            <h3 class="text-lg md:text-2xl font-bold mb-1">
-              Risol Mayo Deluxe
-            </h3>
-            <p class="text-xs text-gray-500 mb-6 leading-relaxed">
-              Creamy gourmet filling with golden crispy skin.
-            </p>
-            <div class="flex justify-between items-center">
-              <span class="text-gold font-bold text-lg">Rp 15.000</span>
-              <button
-                onclick="addToCart('Risol Mayo Deluxe', 15000)"
-                class="w-12 h-12 rounded-full gold-btn flex items-center justify-center text-white text-2xl shadow-lg"
-              >
-                +
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Tahu Bakso -->
-      <div class="menu-item" data-category="tahu">
-        <div
-          class="flex gap-4 md:gap-8 items-center bg-gray-50 dark:bg-white/5 p-5 rounded-[2.5rem] border border-gray-100 dark:border-white/5 group transition-all hover:shadow-xl"
-        >
-          <div
-            class="w-28 h-28 md:w-44 md:h-44 bg-gray-200 dark:bg-neutral-800 rounded-[1.8rem] flex-shrink-0 flex items-center justify-center text-gray-400 italic text-[10px]"
-          >
-            Tahu Bakso
-          </div>
-          <div class="flex-1">
-            <h3 class="text-lg md:text-2xl font-bold mb-1">
-              Tahu Bakso Premium
-            </h3>
-            <p class="text-xs text-gray-500 mb-6 leading-relaxed">
-              Premium beef selection with Savora's secret spices.
-            </p>
-            <div class="flex justify-between items-center">
-              <span class="text-gold font-bold text-lg">Rp 25.000</span>
-              <button
-                onclick="addToCart('Tahu Bakso Premium', 25000)"
-                class="w-12 h-12 rounded-full gold-btn flex items-center justify-center text-white text-2xl shadow-lg"
-              >
-                +
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section
+      id="menu-container"
+      class="py-6 px-6 max-w-2xl mx-auto space-y-6"
+    ></section>
 
-    <!-- Sticky Cart Bar -->
     <div
       id="sticky-cart"
       class="fixed bottom-8 left-0 w-full px-6 translate-y-[200%] sticky-cart z-50"
@@ -212,44 +118,41 @@
             class="bg-white text-gold w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold"
             >0</span
           >
-          <span class="text-xs font-bold uppercase tracking-widest"
+          <span class="text-xs font-bold uppercase tracking-widest text-black"
             >Cek Keranjang</span
           >
         </div>
-        <span id="cart-total" class="font-bold">Rp 0</span>
+        <span id="cart-total" class="font-bold text-black">Rp 0</span>
       </button>
     </div>
 
-    <!-- Modal Checkout (Adaptif Alamat) -->
     <div
       id="checkout-modal"
       class="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm hidden flex items-end"
     >
       <div
-        class="w-full bg-white dark:bg-premiumDark rounded-t-[3rem] p-10 transform transition-transform"
+        class="w-full bg-white dark:bg-premiumDark rounded-t-[2.5rem] p-6 max-h-[90vh] overflow-y-auto no-scrollbar"
       >
         <div
-          class="w-12 h-1.5 bg-gray-300 dark:bg-white/20 mx-auto rounded-full mb-8"
+          class="w-10 h-1 bg-gray-300 dark:bg-white/20 mx-auto rounded-full mb-6"
         ></div>
-        <h3 class="font-serif text-2xl mb-8">Konfirmasi Pesanan</h3>
-
-        <div
-          id="modal-items"
-          class="space-y-4 mb-8 max-h-40 overflow-y-auto no-scrollbar"
-        ></div>
-
-        <!-- Bagian Alamat Dinamis -->
-        <div id="address-section" class="mb-8">
-          <!-- Jika Pickup: Tampilkan daftar lokasi -->
-          <div id="pickup-info" class="hidden">
-            <p
-              class="text-[10px] uppercase tracking-widest text-gold font-bold mb-2"
-            >
-              Pilih Titik Ambil:
-            </p>
+        <h3
+          class="font-serif text-xl mb-6 text-center text-gray-900 dark:text-white uppercase tracking-widest"
+        >
+          Detail Pesanan
+        </h3>
+        <div id="modal-items" class="space-y-4 mb-6"></div>
+        <div class="space-y-4 mb-6">
+          <input
+            type="text"
+            id="cust-name"
+            placeholder="Nama Lengkap"
+            class="w-full p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-sm dark:text-white focus:border-gold outline-none"
+          />
+          <div id="address-section">
             <select
               id="pickup-location"
-              class="w-full p-4 rounded-xl bg-gray-100 dark:bg-white/5 outline-none text-sm border border-gold/20"
+              class="w-full p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gold/30 text-sm font-bold hidden dark:text-white dark:bg-neutral-800"
             >
               <option value="Samarinda Seberang">
                 Savora Store - Samarinda Seberang
@@ -258,206 +161,59 @@
                 Savora Hub - Tenggarong Kota
               </option>
             </select>
-          </div>
-          <!-- Jika Delivery: Tampilkan input alamat -->
-          <div id="delivery-info" class="hidden">
-            <p
-              class="text-[10px] uppercase tracking-widest text-gold font-bold mb-2"
-            >
-              Alamat Pengiriman:
-            </p>
             <textarea
               id="delivery-address"
-              placeholder="Tulis alamat lengkap & patokan..."
-              class="w-full p-4 rounded-xl bg-gray-100 dark:bg-white/5 outline-none text-sm h-20 border border-gold/20"
+              placeholder="Alamat Lengkap Pengiriman..."
+              class="w-full p-4 rounded-xl bg-gray-50 dark:bg-white/5 border border-gold/30 text-sm h-20 hidden dark:text-white focus:border-gold outline-none"
             ></textarea>
           </div>
         </div>
-
-        <div
-          class="flex justify-between text-xl font-bold mb-8 border-t pt-6 border-gray-100 dark:border-white/10"
-        >
-          <span class="text-gray-400">Total</span>
-          <span id="modal-total" class="text-gold">Rp 0</span>
+        <div class="grid grid-cols-3 gap-2 mb-6">
+          <button
+            onclick="setPayment('Transfer', event)"
+            class="pay-btn p-3 rounded-xl border border-gray-200 dark:border-white/10 text-[10px] font-bold uppercase dark:text-white"
+          >
+            Transfer
+          </button>
+          <button
+            onclick="setPayment('QRIS', event)"
+            class="pay-btn p-3 rounded-xl border border-gray-200 dark:border-white/10 text-[10px] font-bold uppercase dark:text-white"
+          >
+            QRIS
+          </button>
+          <button
+            onclick="setPayment('Cash', event)"
+            class="pay-btn p-3 rounded-xl border border-gray-200 dark:border-white/10 text-[10px] font-bold uppercase dark:text-white"
+          >
+            Cash
+          </button>
         </div>
-
-        <input
-          type="text"
-          id="cust-name"
-          placeholder="Nama Kamu"
-          class="w-full p-5 rounded-2xl bg-gray-100 dark:bg-white/5 outline-none mb-6 border border-gray-200 dark:border-white/10 focus:border-gold transition"
-        />
+        <div
+          class="flex justify-between items-center mb-6 bg-gray-100 dark:bg-white/5 p-4 rounded-xl"
+        >
+          <span
+            class="text-xs text-gray-500 uppercase font-bold tracking-widest"
+            >Total Bayar</span
+          >
+          <span id="modal-total" class="text-xl font-bold text-gold">Rp 0</span>
+        </div>
         <button
           onclick="handleOrderProcess()"
           id="btn-finish"
-          class="w-full gold-btn py-5 rounded-2xl text-white font-bold uppercase tracking-widest shadow-xl"
+          class="w-full gold-btn py-4 rounded-xl text-white font-bold uppercase tracking-widest shadow-xl"
         >
-          Konfirmasi & Kirim WA
+          Konfirmasi Pesanan
         </button>
         <button
           onclick="closeCheckout()"
-          class="w-full py-4 text-gray-400 text-[10px] font-bold uppercase mt-2 tracking-widest"
+          class="w-full py-3 text-gray-400 text-[10px] font-bold uppercase mt-2"
         >
-          Batal
+          Tambah Menu
         </button>
       </div>
     </div>
 
-    <script>
-      // --- KONFIGURASI SUPABASE ---
-      // Ganti URL dan KEY dengan data dari Dashboard Supabase -> Settings -> API
-      const SUB_URL = "https://ibnjhwxbqlyhkjpkfrsw.supabase.co";
-      const SUB_KEY = "sb_publishable_Us0NGJasDrvjL5--kowjIw_z80sVhkE";
-      const supabaseClient = supabase.createClient(SUB_URL, SUB_KEY);
-
-      let cart = [];
-      let orderMode = "pickup";
-
-      function toggleDarkMode() {
-        document.documentElement.classList.toggle("dark");
-        document.getElementById("theme-icon").innerText =
-          document.documentElement.classList.contains("dark") ? "☀️" : "🌙";
-      }
-
-      function setOrderMode(mode) {
-        orderMode = mode;
-        const pickupBtn = document.getElementById("btn-pickup");
-        const deliveryBtn = document.getElementById("btn-delivery");
-        const locText = document.getElementById("location-info");
-
-        if (mode === "pickup") {
-          pickupBtn.className =
-            "flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-white dark:bg-gold text-gray-900 dark:text-white shadow-sm";
-          deliveryBtn.className =
-            "flex-1 py-3 rounded-xl font-bold text-sm transition-all text-gray-400";
-          locText.innerText = "Store: Samarinda Seberang";
-        } else {
-          deliveryBtn.className =
-            "flex-1 py-3 rounded-xl font-bold text-sm transition-all bg-white dark:bg-gold text-gray-900 dark:text-white shadow-sm";
-          pickupBtn.className =
-            "flex-1 py-3 rounded-xl font-bold text-sm transition-all text-gray-400";
-          locText.innerText = "Kirim ke: Area Samarinda & Tenggarong";
-        }
-      }
-
-      function addToCart(name, price) {
-        cart.push({ name, price });
-        const cartBar = document.getElementById("sticky-cart");
-        const totalPrice = cart.reduce((acc, curr) => acc + curr.price, 0);
-        document.getElementById("cart-count").innerText = cart.length;
-        document.getElementById("cart-total").innerText =
-          `Rp ${totalPrice.toLocaleString()}`;
-        cartBar.style.transform = "translateY(0)";
-      }
-
-      function openCheckout() {
-        document.getElementById("checkout-modal").classList.remove("hidden");
-        const pickupUI = document.getElementById("pickup-info");
-        const deliveryUI = document.getElementById("delivery-info");
-
-        if (orderMode === "pickup") {
-          pickupUI.classList.remove("hidden");
-          deliveryUI.classList.add("hidden");
-        } else {
-          deliveryUI.classList.remove("hidden");
-          pickupUI.classList.add("hidden");
-        }
-
-        renderModalItems();
-      }
-
-      function renderModalItems() {
-        const list = document.getElementById("modal-items");
-        const modalTotal = document.getElementById("modal-total");
-        list.innerHTML = cart
-          .map(
-            (item, index) => `
-                <div class="flex justify-between items-center bg-gray-50 dark:bg-white/5 p-4 rounded-2xl">
-                    <div><p class="font-bold text-xs">${item.name}</p></div>
-                    <button onclick="removeItem(${index})" class="text-red-500 font-bold px-2">&times;</button>
-                </div>
-            `,
-          )
-          .join("");
-        const totalPrice = cart.reduce((acc, curr) => acc + curr.price, 0);
-        modalTotal.innerText = `Rp ${totalPrice.toLocaleString()}`;
-      }
-
-      function removeItem(index) {
-        cart.splice(index, 1);
-        if (cart.length === 0) closeCheckout();
-        else renderModalItems();
-      }
-
-      function closeCheckout() {
-        document.getElementById("checkout-modal").classList.add("hidden");
-      }
-
-      // --- LOGIKA UTAMA SKEMA 1 (DATABASE + WHATSAPP) ---
-      async function handleOrderProcess() {
-        const name = document.getElementById("cust-name").value;
-        const address =
-          orderMode === "pickup"
-            ? document.getElementById("pickup-location").value
-            : document.getElementById("delivery-address").value;
-
-        if (!name || !address || cart.length === 0)
-          return alert("Lengkapi data Anda!");
-
-        const btn = document.getElementById("btn-finish");
-        btn.innerText = "Memproses Data...";
-        btn.disabled = true;
-
-        const total = cart.reduce((acc, curr) => acc + curr.price, 0);
-        const itemsText = cart.map((i) => i.name).join(", ");
-        const noTrans = `SV-${Date.now().toString().slice(-6)}`;
-
-        try {
-          // 1. Simpan ke Database Supabase
-          const { error } = await supabase.from("tr_transaksi").insert([
-            {
-              tr_notrans: noTrans,
-              tr_nama: name,
-              tr_orderan: `${itemsText} (Mode: ${orderMode}, Alamat: ${address})`,
-              tr_total_bayar: total,
-              tr_metodebayar: "WhatsApp Confirmation",
-            },
-          ]);
-
-          if (error) throw error;
-
-          // 2. Jika Berhasil Simpan, Lanjut Buka WhatsApp
-          const msg = `Halo Savora! Saya ${name} ingin mengkonfirmasi pesanan ${noTrans}:%0A- Orderan: ${itemsText}%0A- Mode: ${orderMode.toUpperCase()}%0A- Alamat: ${address}%0A- Total: Rp ${total.toLocaleString()}`;
-          window.open(`https://wa.me/6285246944062?text=${msg}`, "_blank");
-
-          alert("Data tersimpan di database. Silakan konfirmasi di WhatsApp!");
-          cart = []; // Reset keranjang
-          location.reload();
-        } catch (err) {
-          console.error(err);
-          alert(
-            "Gagal simpan ke database. Tapi tenang, silakan lanjut WA manual.",
-          );
-          // Tetap buka WA meski DB gagal agar jualan tetap jalan
-          window.open(
-            `https://wa.me/6285246944062?text=Order Manual Savora: ${itemsText}`,
-            "_blank",
-          );
-        }
-      }
-
-      function filterMenu(cat) {
-        const items = document.querySelectorAll(".menu-item");
-        const pills = document.querySelectorAll(".category-pill");
-        pills.forEach((p) => p.classList.remove("active"));
-        event.target.classList.add("active");
-        items.forEach((item) => {
-          item.style.display =
-            cat === "all" || item.getAttribute("data-category") === cat
-              ? "block"
-              : "none";
-        });
-      }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
   </body>
 </html>
