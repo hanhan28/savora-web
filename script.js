@@ -8,7 +8,6 @@ let paymentMethod = "";
 
 // MASTER DATA MENU
 const menuSavora = [
-  // RISOL ROGUT
   {
     id: 1,
     cat: "rogut",
@@ -37,7 +36,6 @@ const menuSavora = [
     price: 7000,
     desc: "1 pcs Risol Rogut",
   },
-  // RISOL MAYO
   {
     id: 5,
     cat: "mayo",
@@ -66,7 +64,6 @@ const menuSavora = [
     price: 7000,
     desc: "1 pcs Risol Mayo",
   },
-  // TASO ORIGINAL
   {
     id: 9,
     cat: "taso-ori",
@@ -95,7 +92,6 @@ const menuSavora = [
     price: 6000,
     desc: "1 pcs Taso Original",
   },
-  // TASO LUMER
   {
     id: 13,
     cat: "taso-lumer",
@@ -146,7 +142,6 @@ function renderMenu(filter = "all") {
   });
 }
 
-// Inisialisasi awal
 renderMenu();
 
 function toggleDarkMode() {
@@ -236,7 +231,7 @@ function renderModalItems() {
                         <span class="text-xs font-bold w-6 text-center">${data.qty}</span>
                         <button onclick="changeQty('${name}', 1)" class="px-2 py-1 text-gold font-bold">+</button>
                     </div>
-                    <button onclick="deleteItem('${name}')" class="text-red-500 p-1">Hapus</button>
+                    <button onclick="deleteItem('${name}')" class="text-red-500 p-1 text-[10px]">Hapus</button>
                 </div>
             </div>`;
   }
@@ -269,21 +264,19 @@ async function handleOrderProcess() {
     orderMode === "pickup"
       ? document.getElementById("pickup-location").value
       : document.getElementById("delivery-address").value;
-  if (!name || !address || !paymentMethod || Object.keys(cart).length === 0)
-    return alert("Mohon lengkapi data!");
+
+  if (!name || !address || !paymentMethod || Object.keys(cart).length === 0) {
+    alert("Mohon lengkapi Nama, Alamat, dan Pembayaran!");
+    return;
+  }
 
   const btn = document.getElementById("btn-finish");
-  const originalText = btn.innerText;
-  btn.innerText = "Menyimpan Pesanan...";
+  btn.innerText = "SEDANG MEMPROSES...";
   btn.disabled = true;
 
   try {
     const now = new Date();
-    const dd = String(now.getDate()).padStart(2, "0");
-    const mm = String(now.getMonth() + 1).padStart(2, "0");
-    const yy = String(now.getFullYear()).slice(-2);
-    const tglCode = `${dd}${mm}${yy}`;
-    let nextOrder = "001";
+    const tglCode = `${String(now.getDate()).padStart(2, "0")}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getFullYear()).slice(-2)}`;
 
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
@@ -291,9 +284,8 @@ async function handleOrderProcess() {
       .from("tr_transaksi")
       .select("*", { count: "exact", head: true })
       .gte("created_at", startOfDay.toISOString());
-    nextOrder = String((count || 0) + 1).padStart(3, "0");
+    const noTrans = `SV-${tglCode}-${String((count || 0) + 1).padStart(3, "0")}`;
 
-    const noTrans = `SV-${tglCode}-${nextOrder}`;
     const total = Object.values(cart).reduce(
       (acc, curr) => acc + curr.price * curr.qty,
       0,
@@ -302,7 +294,7 @@ async function handleOrderProcess() {
       .map(([name, data]) => `${name} (${data.qty}x)`)
       .join(", ");
 
-    // Simpan ke Supabase
+    // SIMPAN KE SUPABASE
     const { error: insertError } = await sbClient.from("tr_transaksi").insert([
       {
         tr_notrans: noTrans,
@@ -315,21 +307,24 @@ async function handleOrderProcess() {
 
     if (insertError) throw insertError;
 
-    // --- TRIK AMPUH ANTI POPUP ---
+    // --- LOGIKA ANTI-POPUP (UBAH TOMBOL) ---
     const waMsg = `Halo Savora! Saya ${name} ingin order ${noTrans}:%0A%0A- Menu: ${itemsSummary}%0A- Mode: ${orderMode.toUpperCase()}%0A- Alamat: ${address}%0A- Pembayaran: ${paymentMethod}%0A- Total: Rp ${total.toLocaleString()}`;
     const waUrl = `https://wa.me/6285247763672?text=${waMsg}`;
 
-    // Ubah tombol jadi tombol WhatsApp yang harus diklik user
-    btn.innerText = "KLIK UNTUK KIRIM KE WHATSAPP";
+    // Update tampilan tombol secara visual
     btn.disabled = false;
-    btn.style.background = "#25D366"; // Warna Hijau WA
+    btn.innerText = "KLIK: KIRIM PESANAN KE WA";
+    btn.style.background = "#25D366";
+    btn.style.color = "white";
+
+    // Ganti fungsi klik agar langsung pindah halaman
     btn.onclick = function () {
       window.location.href = waUrl;
     };
   } catch (err) {
     console.error(err);
-    alert("Gagal koneksi database, coba lagi Lek!");
-    btn.innerText = originalText;
+    btn.innerText = "KONEKSI ERROR, COBA LAGI";
     btn.disabled = false;
+    btn.style.background = "#ef4444";
   }
 }
