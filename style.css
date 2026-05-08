@@ -1,37 +1,69 @@
 body {
   font-family: "Inter", sans-serif;
-  transition: background-color 0.5s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 .font-serif {
   font-family: "Playfair Display", serif;
 }
 .glass-nav {
   backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.8);
-  height: 70px;
+  background: rgba(255, 255, 255, 0.85);
 }
 .dark .glass-nav {
-  background: rgba(10, 10, 10, 0.8);
+  background: rgba(15, 15, 15, 0.85);
 }
-.gold-btn {
-  background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
-  transition: all 0.3s ease;
-}
-.sticky-cart {
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.category-pill {
-  transition: all 0.3s ease;
-  border: 1px solid #d4af37;
-}
-.category-pill.active {
-  background-color: #d4af37;
-  color: white;
+.nav-logo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.category-pill {
+  padding: 10px 20px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.4s ease;
+  background: white;
+  white-space: nowrap;
+}
+.dark .category-pill {
+  background: #1a1a1a;
+  color: #94a3b8;
+}
+.category-pill.active {
+  background: #d4af37;
+  color: white;
+  border-color: #d4af37;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+}
+.menu-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.menu-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+}
+.menu-card-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 18px;
+}
+.gold-gradient {
+  background: linear-gradient(135deg, #fbbf24 0%, #d4af37 100%);
+}
+.pay-btn.border-gold {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: #d4af37;
+  color: #d4af37;
+}
+.social-btn {
+  font-size: 1.8rem;
+  transition: transform 0.2s;
+  display: inline-block;
 }
