@@ -269,20 +269,22 @@ async function handleOrderProcess() {
     orderMode === "pickup"
       ? document.getElementById("pickup-location").value
       : document.getElementById("delivery-address").value;
-  if (!name || !address || !paymentMethod) return alert("Lengkapi data!");
+  if (!name || !address || !paymentMethod || Object.keys(cart).length === 0)
+    return alert("Mohon lengkapi data!");
 
   const btn = document.getElementById("btn-finish");
-  btn.innerText = "Processing...";
+  const originalText = btn.innerText;
+  btn.innerText = "Menyimpan Pesanan...";
   btn.disabled = true;
 
   try {
     const now = new Date();
-    const tglCode =
-      String(now.getDate()).padStart(2, "0") +
-      String(now.getMonth() + 1).padStart(2, "0") +
-      String(now.getFullYear()).slice(-2);
-
+    const dd = String(now.getDate()).padStart(2, "0");
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const yy = String(now.getFullYear()).slice(-2);
+    const tglCode = `${dd}${mm}${yy}`;
     let nextOrder = "001";
+
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     const { count } = await sbClient
@@ -300,7 +302,8 @@ async function handleOrderProcess() {
       .map(([name, data]) => `${name} (${data.qty}x)`)
       .join(", ");
 
-    await sbClient.from("tr_transaksi").insert([
+    // Simpan ke Supabase
+    const { error: insertError } = await sbClient.from("tr_transaksi").insert([
       {
         tr_notrans: noTrans,
         tr_nama: name,
@@ -310,12 +313,27 @@ async function handleOrderProcess() {
       },
     ]);
 
-    const waMsg = `Halo Savora! Saya ${name} ingin order ${noTrans}:%0A%0A- Menu: ${itemsSummary}%0A- Mode: ${orderMode.toUpperCase()}%0A- Pembayaran: ${paymentMethod}%0A- Total: Rp ${total.toLocaleString()}`;
-    window.open(`https://wa.me/6285247763672?text=${waMsg}`, "_blank");
-    location.reload();
+    if (insertError) throw insertError;
+
+    // --- TRIK AMPUH ANTI POPUP ---
+    const waMsg = `Halo Savora! Saya ${name} ingin order ${noTrans}:%0A%0A- Menu: ${itemsSummary}%0A- Mode: ${orderMode.toUpperCase()}%0A- Alamat: ${address}%0A- Pembayaran: ${paymentMethod}%0A- Total: Rp ${total.toLocaleString()}`;
+    const waUrl = `https://wa.me/6285247763672?text=${waMsg}`;
+
+    // Ubah tombol jadi tombol WhatsApp yang harus diklik user
+    btn.innerText = "KLIK UNTUK KIRIM KE WHATSAPP";
+    btn.disabled = false;
+    btn.style.background = "#25D366"; // Warna Hijau WA
+    btn.onclick = function () {
+      window.location.href = waUrl;
+    };
+
+    alert(
+      "Pesanan Tersimpan! Silakan klik tombol hijau untuk mengirim detail ke WhatsApp.",
+    );
   } catch (err) {
-    alert("Gagal koneksi database.");
-    btn.innerText = "Konfirmasi Pesanan";
+    console.error(err);
+    alert("Gagal koneksi database, coba lagi Lek!");
+    btn.innerText = originalText;
     btn.disabled = false;
   }
 }
