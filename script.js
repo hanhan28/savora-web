@@ -326,10 +326,6 @@ async function handleOrderProcess() {
     btn.onclick = function () {
       window.location.href = waUrl;
     };
-
-    alert(
-      "Pesanan Tersimpan! Silakan klik tombol hijau untuk mengirim detail ke WhatsApp.",
-    );
   } catch (err) {
     console.error(err);
     alert("Gagal koneksi database, coba lagi Lek!");
