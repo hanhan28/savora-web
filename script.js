@@ -172,7 +172,7 @@ async function handleOrderProcess() {
         tr_total_bayar: total,
         tr_metodebayar: paymentMethod,
         tr_tipe: orderMode.toUpperCase(),
-        tr_alamat: address || "Pickup Indogrosir",
+        tr_alamat: address || "Pickup",
       },
     ]);
 
